@@ -1,2 +1,4 @@
-presidio-analyzer[app,spacy]
+fastapi
 uvicorn
+spacy
+presidio-analyzer[app,spacy]
