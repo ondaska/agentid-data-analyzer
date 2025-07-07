@@ -1,4 +1,3 @@
 fastapi
 uvicorn
 presidio-analyzer[app,spacy]
-en-core-web-sm==3.8.0
