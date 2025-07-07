@@ -1,12 +1,17 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from presidio_analyzer import AnalyzerEngine
-from presidio_analyzer.nlp_engine import SpacyNlpEngine, NlpEngineProvider
+from presidio_analyzer.nlp_engine import NlpEngineProvider
 from pydantic import BaseModel
-import json
+import spacy
+import subprocess
 
-app = FastAPI()
+# Stáhne model, pokud ještě není
+try:
+    spacy.load("en_core_web_sm")
+except OSError:
+    subprocess.run(["python", "-m", "spacy", "download", "en_core_web_sm"])
 
-# Vlastní NLP engine s menším modelem
+# Konfigurace NLP engine
 config = {
     "nlp_engine_name": "spacy",
     "models": [{"lang_code": "en", "model_name": "en_core_web_sm"}]
@@ -14,6 +19,8 @@ config = {
 provider = NlpEngineProvider(nlp_configuration=config)
 nlp_engine = provider.create_engine()
 analyzer = AnalyzerEngine(nlp_engine=nlp_engine)
+
+app = FastAPI()
 
 class TextInput(BaseModel):
     text: str
